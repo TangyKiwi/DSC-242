@@ -1,0 +1,85 @@
+%! Author = Kevin Lin
+
+% Preamble
+\documentclass[11pt,a4paper,margin=1in]{article}
+
+% Packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage{pdfpages}
+
+\title{Notes}
+\author{}
+\date{}
+
+% Document
+\begin{document}
+\maketitle
+
+\section*{9/24/2026}
+Transform original event of taylor polynomials by applying a Markov inequality to
+obtain an upper bound dependent on the moment generating function of our random variable.
+By indepenence of the random variables, we can write the expectation of the exponential
+of the sum as a product of each individual expectation. Then we can optimize this
+final bound in terms of $\lambda$.
+\\
+\\
+Bernoulli Sums:
+\begin{gather*}
+    X_1, \dots, X_n \text{ iid Bern}(p) \\
+    E[X_i] = p, Var(X_i) = p(1 - p) \\
+    P[X_i = 1] = p, P[X_i = 0] = 1 - p \\ 
+    \mathcal{N}(0, 1) = \frac{1}{\sqrt{n}}\sum_{i = 1}^{n}\frac{X_i - E[X_i]}{\sqrt{Var(X_i)}} \\
+    P[\frac{1}{n}\sum_{i=1}^{n}X_i - p \geq t] = P[\uparrow \geq t\sqrt{\frac{n}{p(1 - p)}}] \approx 1 - \Phi(t\sqrt{\frac{n}{p(1 - p)}}) \approx e^{-\frac{nt^2}{p(1 - p)}} \\
+\end{gather*}
+
+\noindent Large Deviation Principle:
+\begin{gather*}
+    P[\frac{1}{n}\sum_{i=1}^{n}X_i - p \geq t] \approx e^{-nD_{KL}(p + t || p)} \\
+    D_{KL}(q || p) = E_q[\log(\frac{q}{p})] = (1 - q)\log(\frac{1 - q}{1 - p}) + q\log(\frac{q}{p}) \approx \frac{(q - p)^2}{2p(1 - p)}, q = t \\
+\end{gather*}
+by Chebyshev inequality:
+\begin{align*}
+    P[\frac{1}{n}\sum_{i=1}^{n}X_i - p \geq t] &\leq P[(\frac{1}{n}\sum_{i=1}^{n}X_i - p)^2 \geq t^2] \\
+    &\leq \frac{1}{t^2}E[(\frac{1}{n}\sum_{i=1}^{n}X_i - p)^2] \\ 
+    &= \frac{1}{t^2}\frac{p(1 - p)}{n} \\
+\end{align*}
+in the case of polynomial decay $k$:
+\begin{align*}
+    P[\frac{1}{n}\sum_{i=1}^{n}X_i - p \geq t] &\leq P[(\frac{1}{n}\sum_{i=1}^{n}X_i - p)^k \geq t^k] \\
+    &\leq \frac{1}{t^k}E[(\frac{1}{n}\sum_{i=1}^{n}X_i - p)^k] \\ 
+    &= \left(\frac{1}{t^2}\frac{p(1 - p)}{n}\right)^{\frac{k}{2}} \\
+\end{align*}
+
+Let $\psi(\lambda) = \log E[e^{\lambda(X_i - p)}]$ where it's MGF is $e^{\psi(\lambda)} = E[e^{\lambda(X_i - p)}]$, thus:
+\begin{align*}
+    P[\frac{1}{n}\sum_{i=1}^{n}X_i - p \geq t] &\leq P[e^{\lambda\sum_{i=1}^{n}(X_i - p)} \geq e^{\lambda nt}], \lambda > 0 \\
+    &\leq e^{-\lambda nt}E[e^\lambda\sum_{i=1}^{n}(X_i - p)] \\
+    &= e^{-\lambda nt}\prod_{i=1}^{n}E[e^\lambda(X_i - p)] \\
+    &= e^{-\lambda nt + n\psi(\lambda)} \\
+    &= e^{-n(\lambda t - \psi(\lambda))} \\
+\end{align*}
+Maximizing $\lambda t - \psi(\lambda)$ gives the best bound (minimizes due to $e^{-n(\dots)}$) \\
+Given $\psi(\lambda) = \log E[e^{\lambda X_i}] - \lambda p = \log(1 - p + pe^\lambda) - \lambda p$:
+\begin{align*}
+    \lambda t - \psi(\lambda) &= \lambda t - \log(1 - p + pe^\lambda) + \lambda p \\
+    &= \lambda(t + p) - \log(1 - p + pe^\lambda), \text{ minimize w/ derivative = 0}\\
+    &= D_{KL}(p + t || p) \\
+\end{align*}
+Thus the bound is $P[\frac{1}{n}\sum_{i=1}^{n}X_i - p \geq t] \leq e^{-nD_{KL}(p + t || p)}$.
+With this we can characterize how fast the probability decays as $n$ increases. \\
+
+\noindent This gives us the Chernoff bound, where for i.i.d. $X_i, \dots, X_n$ where
+$E[X_i] = 0, \psi(\lambda) = \log E[e^{\lambda X_i}]$:
+\[
+    \psi^*(t) = \sup_{\lambda > 0}(\lambda t - \psi(\lambda)) \\
+\]
+Then $P[\frac{1}{n}\sum_{i=1}^{n}X_i \geq t] \leq e^{-n\psi^*(t)}$.
+
+\begin{gather*}
+    X_i \sim \mathcal{N}(0, \sigma^2), \psi(\lambda) = \frac{\sigma^2\lambda^2}{2} \\
+    \sup_{\lambda > 0} (\lambda t - \frac{\sigma^2\lambda^2}{2})
+\end{gather*}
+
+\end{document}
