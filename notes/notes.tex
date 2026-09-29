@@ -17,7 +17,7 @@
 \begin{document}
 \maketitle
 
-\section*{9/24/2026}
+\section*{9/24/26}
 Transform original event of taylor polynomials by applying a Markov inequality to
 obtain an upper bound dependent on the moment generating function of our random variable.
 By indepenence of the random variables, we can write the expectation of the exponential
@@ -82,4 +82,74 @@ Then $P[\frac{1}{n}\sum_{i=1}^{n}X_i \geq t] \leq e^{-n\psi^*(t)}$.
     \sup_{\lambda > 0} (\lambda t - \frac{\sigma^2\lambda^2}{2})
 \end{gather*}
 
+\section*{9/29/26}
+Sub-Gaussian random variable: \\
+Given a mean ($\mu$ = 0) random variable $X$ with variance $\sigma^2$ sub Gaussian,
+if $E[e^{\lambda X}] \leq e^{\frac{\sigma^2\lambda^2}{2}}$, then 
+$\psi(\lambda) \leq \frac{\lambda^2\sigma^2}{2}$. The random variable is consequently
+bounded (tails are not heavier than a Gaussian distribution).
+
+\begin{align*}
+    P[|X| > t] &\leq 2 e^{-\frac{t^2}{2\sigma^2}}, \forall t \geq 0 \\
+    P[X \geq t] &= P[e^{\lambda X} \geq e^{\lambda t}] \\
+    &\leq e^{-\lambda t}E[e^{\lambda X}] \\
+    &\leq e^{-\lambda t + \frac{\sigma^2\lambda^2}{2}} \\
+    &= e^{-\frac{t^2}{2\sigma^2}} \\
+\end{align*}
+This is a case of exponential decay, standard for sub Gaussian random variables. \\
+
+\noindent 
+For $X_i$ i.i.d. $\sigma_i^2$ sub Gaussian, $E[e^{\lambda X_i}] \leq e^{\frac{\sigma_i^2\lambda^2}{2}}$,
+then $\sum_{i=1}^{n}X_i$ is $(\sum_{i=1}^{n}\sigma_i^2)$ sub Gaussian, thus
+\begin{gather*}
+    P[|\sum_{i=1}^{n}X_i| > t] \leq 2e^{-\frac{t^2}{2\sum_{i=1}^{n}\sigma_i^2}} \\
+\end{gather*}
+As long as we can prove an upper bound of the MGF $E[e^{\lambda \sum_{i=1}^{n}X_i}] = E[\prod_{i=1}^{n}e^{\lambda X_i}] = \prod_{i=1}^{n}E[e^{\lambda X_i}]$.
+We know that $E[e^{\lambda X_i}] \leq e^{\frac{\sigma_i^2\lambda^2}{2}}$, thus
+\begin{gather*}
+    E[e^{\lambda \sum_{i=1}^{n}X_i}] = \prod_{i=1}^{n}e^{\frac{\sigma_i^2\lambda^2}{2}} \leq e^{\frac{\lambda^2}{2}\sum_{i=1}^{n}\sigma_i^2} \\
+\end{gather*}
+This is a case of exponential decay, standard for sub Gaussian random variables. \\ 
+
+\noindent
+Special case of bounded random variables (Hoeffding's lemma): \\
+If $a \leq X \leq b$ then $X - E[X]$ is $\frac{(b - a)^2}{4}$ sub Gaussian. \\
+If $a_i \leq X_i \leq b_i$ and $X_i$ are independent, then $P[|\sum_{i=1}^{n}X_i - E[X_i]| \geq t] \leq 2e^{-\frac{2t^2}{\sum_{i=1}^{n}(b_i - a_i)^2}}$. \\
+If a random variable is bounded, it's sub Gaussian is also always upper bounded. \\
+
+\noindent
+Suppose we have a Bernoulli random variable $X_1, \dots, X_n \sim \text{Bernoulli}(p)$ where $X_i \in \{0, 1\}$, 
+then each $X_i$ is $\frac{1}{4}$ sub Gaussian. Using this result we can plug this
+into (2) of the previous section to get a bound on the sum of Bernoulli random variables.
+\begin{gather*}
+    P[|\frac{1}{n}\sum_{i=1}^{n}X_i - p| \geq t] \leq 2e^{-\frac{2nt^2}{\sum_{i=1}^{n}(1 - 0)^2}} = 2e^{-2nt^2} \\
+\end{gather*}
+If $p = 0$, then each $\sum_{i=1}^{n}X_i = 0$. We can consequently define the sub 
+Gaussian norm of a random variable $X$ as $\|X\|_{\psi_2} = \inf\{t > 0: E[e^{\frac{X^2}{t^2}}] \leq 2\}$, 
+which is the smallest $t$ such that $E[e^{\frac{X^2}{t^2}}] \leq 2$. This is a 
+measure of how "sub-Gaussian" a random variable is. \\
+
+\noindent
+\subsection*{Martingale method}
+The concentration of $f(X_1, \dots, X_n)$ where $M_i = E[f(X_1, \dots, X_n) | X_1, \dots, X_i]$ 
+is a martingale.
+\begin{gather*}
+    f(X_1, \dots, X_n) - E[f(X_1, \dots, X_n)] = M_n - M_0 = \sum_{i=1}^{n}(M_i - M_{i-1}) \\
+\end{gather*}
+This is a sum of Martingale differences. Then by Azuma-Hoeffding inequality, if
+$X_1, \dots, X_n$ are independent then $E[e^{\lambda(M_i - M_{i-1})} | X_1, \dots, X_{i-1}] \leq e^{\frac{\lambda^2\sigma_i^2}{2}}$.
+Then we can also show that $\sum_{i=1}^{n}(M_i - M_{i-1})$ is $(\sum_{i=1}^{n}\sigma_i^2)$ sub Gaussian, thus
+$P[|f(X_1, \dots, X_n) - E[f(X_1, \dots, X_n)]| \geq t] \leq 2e^{-\frac{t^2}{2\sum_{i=1}^{n}\sigma_i^2}}$. \\
+
+Proof:
+\begin{align*}
+    E[e^{\lambda(M_i - M_{i-1})}] &= E[E[e^{\lambda\sum{i=1}^{n}(M_i - M_{i-1})} | X_1, \dots, X_{i-1}]] \\
+    &= E[e^{\lambda\sum_{i=1}^{n}(M_i - M_{i-1})}E[e^{\lambda(M_i - M_{i-1})} | X_1, \dots, X_{i-1}]] \\
+    &\leq e^{\frac{\lambda^2\sigma_i^2}{2}}E[e^{\lambda\sum_{i=1}^{n}(M_i - M_{i-1})}] \\
+\end{align*}
+
+\noindent
+\textbf{Corollary:} \\
+Given $f(X_1, \dots, X_n)$, then $||\text{Diff}||_{\infty} = \sup_{x_1, \dots, x_n, x_i'}[\sup_{z} f(x_1, \dots, x_{i-1}, z, x_{i+1}, \dots, x_n) - \inf_{z} f(x_1, \dots, x_{i-1}, z, x_{i+1}, \dots, x_n)]$.
+Then $P[|f(X_1, \dots, X_n) - E[f(X_1, \dots, X_n)]| \geq t] \leq 2e^{-\frac{2t^2}{\sum_{i=1}^{n}||\text{Diff}||_{\infty}^2}}$.
 \end{document}
