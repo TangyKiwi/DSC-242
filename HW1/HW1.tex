@@ -104,4 +104,117 @@ sum the geometric series using $r = \frac{|\lambda| b}{3}$:
     \log E[e^{\lambda X}] = \psi(\lambda) \leq \frac{\lambda^2\sigma^2}{2(1 - |\lambda| b / 3)}
 \end{gather*}
 
+\section{}
+\begin{enumerate}[(a)]
+    \item Since $X$ is a mean-zero random variable, and $X_+ = \max(X, 0)$, for any $t > 0$:
+    \begin{gather*}
+        P[X \geq t] = P[X_+ \geq t] \\
+        P[X_+ \geq t] = P[X_+^p \geq t^p] \\
+        \text{By Markov's inequality, } P[X_+^p \geq t^p] \leq \frac{E[X_+^p]}{t^p} \\
+        P[X_+ \geq t] \leq \inf_{p > 0} \frac{E[X_+^p]}{t^p} \\
+    \end{gather*}
+    For the second inequality, using $p \rightarrow 0_+$, we get that for each fixed $x$:
+    \begin{gather*}
+        x_+^p \rightarrow \begin{cases}
+            1, & x > 0 \\
+            0, & x \leq 0
+        \end{cases} \therefore \\
+        X_+^p \rightarrow \mathbf{1}_{X > 0} \therefore \\
+        \frac{E[X_+^p]}{t^p} \rightarrow \frac{P[X > 0]}{1} = P[X > 0] \\
+    \end{gather*}
+    Let $p = \lambda t$ for $\lambda > 0$. Then, since $t > 0$, we have $p > 0$, thus:
+    \begin{gather*}
+        \inf_{p > 0} \frac{E[X_+^p]}{t^p} \leq \frac{E[X_+^{\lambda t}]}{t^{\lambda t}} \\
+        \frac{x_+^{\lambda t}}{t^{\lambda t}} = \left( \frac{x}{t} \right)^{\lambda t} = e^{\lambda t \log(x/t)} \\
+        \log\left(\frac{x}{t}\right) \leq \frac{x}{t} - 1 \\
+        \lambda t \log\left(\frac{x}{t}\right) \leq \lambda (x - t) \\
+        \left(\frac{x}{t}\right)^{\lambda t} \leq e^{\lambda (x - t)} \therefore \\
+        \frac{x_+^{\lambda t}}{t^{\lambda t}} \leq e^{\lambda (x - t)} \therefore \\
+        \frac{E[X_+^{\lambda t}]}{t^{\lambda t}} \leq E[e^{\lambda (X - t)}] = e^{-\lambda t} E[e^{\lambda X}] \therefore \\
+        \inf_{p > 0} \frac{E[X_+^p]}{t^p} \leq e^{-\lambda t} E[e^{\lambda X}] \quad \forall \lambda > 0
+    \end{gather*}
+    For $\lambda = 0$, we have from the hint $e^{-\lambda t} E[e^{\lambda X}] = 1 \geq P[X > 0]$. 
+    Since the inequality holds over all $\lambda \geq 0$, we can take the infimum over $\lambda \geq 0$:
+    \[
+        \inf_{p > 0} \frac{E[X_+^p]}{t^p} \leq \inf_{\lambda \geq 0} e^{-\lambda t} E[e^{\lambda X}]
+    \]
+    which gives us the full inequality:
+    \[
+        P[X \geq t] \leq \inf_{p > 0} \frac{E[X_+^p]}{t^p} \leq \inf_{\lambda \geq 0} e^{-\lambda t} E[e^{\lambda X}]
+    \]
+    \item Let $X = \epsilon Y$ where $\epsilon$ is a Rademacher random variable 
+    independent of $Y$, where $P[Y \geq y] = y^{-\alpha}$ for $y \geq 1$ and $\alpha > 1$.
+    For $t \geq e$, the exact tail probability $P[X \geq t]$ is:
+    \begin{gather*}
+        P[X \geq t] = P[\epsilon Y \geq t] = P[\epsilon = 1, Y \geq t] + P[\epsilon = -1, Y \geq t] \\
+        P[X \geq t] = \frac{1}{2} P[Y \geq t] + 0 = \frac{1}{2} t^{-\alpha} \\
+    \end{gather*}
+    For the first infimum, the exact tail probability $P[X \geq t]$ is:
+    \begin{gather*}
+        X_+ = \begin{cases}
+            Y, & \epsilon = 1 \\
+            0, & \epsilon = -1
+        \end{cases} \therefore \\
+        E[X_+^p] = \frac{1}{2} E[Y^p] + \frac{1}{2} E[0^p] = \frac{1}{2} E[Y^p] \\
+        E[Y^p] = \int_1^\infty y^p \alpha y^{-\alpha - 1} dy = \frac{\alpha}{\alpha - p} \quad \text{for } 0 < p < \alpha \therefore \\
+        \inf_{p > 0}\frac{E[X_+^p]}{t^p} = \frac{\alpha}{2(\alpha - p)t^p} \\
+    \end{gather*}
+    We need to minimize this:
+    \begin{gather*}
+        \log\left(\frac{\alpha}{2(\alpha - p)t^p}\right) = \log\left(\frac{\alpha}{2}\right) - \log(\alpha - p) - p \log(t) \\
+        \frac{d}{dp} \left( \log\left(\frac{\alpha}{2}\right) - \log(\alpha - p) - p \log(t) \right) = 0 \\
+        \frac{1}{\alpha - p} - \log(t) = 0 \therefore \\
+        p = \alpha - \frac{1}{\log(t)} \therefore \\
+        \inf_{p > 0}\frac{E[X_+^p]}{t^p} = \frac{\alpha}{2(1/\log(t))t^{\alpha - 1/\log(t)}} = \frac{\alpha \log(t)}{2} t^{-\alpha + 1/\log(t)} = \frac{e\alpha\log(t)}{2et^{\alpha}}\\
+    \end{gather*}
+    Compared to the original tail probability $P[X \geq t] = \frac{1}{2} t^{-\alpha}$,
+    the overestimate factor is:
+    \[
+        \frac{e\alpha\log(t)}{2et^{\alpha}} \cdot \frac{2t^{\alpha}}{1} = e\alpha\log(t)
+    \]
+    For the second infimum, we have:
+    \begin{gather*}
+        E[e^{\lambda X}] = \frac{1}{2} E[e^{\lambda Y}] + \frac{1}{2} E[e^{-\lambda Y}] \\
+    \end{gather*}
+    But $E[e^{\lambda Y}] = \int_1^\infty e^{\lambda y} \alpha y^{-\alpha - 1} dy$ 
+    diverges for any $\lambda > 0$, so we can only consider $\lambda = 0$. Thus, the second infimum is:
+    \[
+        \inf_{\lambda \geq 0} e^{-\lambda t} E[e^{\lambda X}] = 1
+    \]
+    Compared to the original tail probability $P[X \geq t] = \frac{1}{2} t^{-\alpha}$,
+    the overestimate factor is:
+    \[
+        1 \cdot \frac{2t^{\alpha}}{1} = 2t^{\alpha}
+    \]
+\end{enumerate}
+
+\section{}
+\begin{enumerate}[(a)]
+    \item If $X = 0$, then for $E[e^{X^2/K^2}] = E[e^{0}] = 1 \leq 2$, therefore
+    $||X||_{\psi_2} = \inf\{K > 0 : E[e^{X^2/K^2}] \leq 2\} = 0$. Suppose $X \neq 0$,
+    then for $K \rightarrow 0^+$, $e^{X^2/K^2} \rightarrow \infty$ and consequently
+    $E[e^{X^2/K^2}] \rightarrow \infty > 2$. Thus, $||X||_{\psi_2} > 0$, which
+    contradicts $||X||_{\psi_2} = 0$. Therefore, $||X||_{\psi_2} = 0$ if and only if $X = 0$.
+    \item $||cX||_{\psi_2} = |c|||X||_{\psi_2}$. If $c = 0$, both sides are zero.
+    If $c \neq 0$, then:
+    \begin{gather*}
+        ||cX||_{\psi_2} = \inf\{K > 0 : E[e^{(cX)^2/K^2}] \leq 2\} \\
+        ||cX||_{\psi_2} = \inf\{K > 0 : E[e^{X^2/(K/|c|)^2}] \leq 2\}, \quad K' = K/|c| \\
+        ||cX||_{\psi_2} = |c| \inf\{K' > 0 : E[e^{X^2/(K')^2}] \leq 2\} = |c|||X||_{\psi_2}
+    \end{gather*}
+    \item Let $a > ||X||_{\psi_2}$ and $b > ||Y||_{\psi_2}$. Then, we have:
+    \begin{gather*}
+        E[e^{X^2/a^2}] \leq 2, \quad E[e^{Y^2/b^2}] \leq 2 \\
+        E[e^{(X+Y)^2/(a+b)^2}] = E[e^{((a/(a+b))(X/a) + (b/(a+b))(Y/b))^2}] \\
+        \text{Let } \theta = \frac{a}{a+b}, \quad 1 - \theta = \frac{b}{a+b} \\
+        \left(\theta(X/a) + (1 - \theta)(Y/b)\right)^2 \leq (\theta)(X/a)^2 + (1 - \theta)(Y/b)^2 \\
+        E[e^{(X+Y)^2/(a+b)^2}] \leq E[e^{(\theta)(X/a)^2 + (1 - \theta)(Y/b)^2}] \\
+        E[e^{(X+Y)^2/(a+b)^2}] \leq E[e^{(\theta))(X/a)^2} e^{(1 - \theta)(Y/b)^2}] \\
+        E[e^{(X+Y)^2/(a+b)^2}] \leq E[e^{(\theta)(X/a)^2}] E[e^{(1 - \theta)(Y/b)^2}] \\
+        E[e^{(X+Y)^2/(a+b)^2}] \leq (E[e^{(X/a)^2}])^{\theta} (E[e^{(Y/b)^2}])^{1 - \theta} \\
+        E[e^{(X+Y)^2/(a+b)^2}] \leq (E[e^{(X/a)^2}]E[e^{(Y/b)^2}])^{\theta + (1 - \theta))} \\
+        E[e^{(X+Y)^2/(a+b)^2}] \leq 2^1 = 2, \therefore\\
+        ||X+Y||_{\psi_2} \leq a + b = ||X||_{\psi_2} + ||Y||_{\psi_2}
+    \end{gather*}
+\end{enumerate}
 \end{document}
