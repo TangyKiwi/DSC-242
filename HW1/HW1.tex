@@ -217,4 +217,69 @@ sum the geometric series using $r = \frac{|\lambda| b}{3}$:
         ||X+Y||_{\psi_2} \leq a + b = ||X||_{\psi_2} + ||Y||_{\psi_2}
     \end{gather*}
 \end{enumerate}
+
+\section{}
+\begin{enumerate}[(a)]
+    \item Let $X$ be a random variable where $E[X] = 0$, $Var[X] = \sigma^2$, and
+    $X \leq b$ with probability 1. Then, we can show that for all $\lambda \geq 0$:
+    \[
+        \log E[e^{\lambda X}] \leq \frac{\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2}
+    \]
+    by starting with $e^{\lambda X} = 1 + \lambda X + (e^{\lambda X} - 1 - \lambda X)$
+    and bounding the last term. Because $X \leq b$ and $\lambda \geq 0$, $\lambda X \leq \lambda b$.
+    From the hint, we can then know that:
+    \begin{gather*}
+        \frac{e^{\lambda X} - 1 - \lambda X}{(\lambda X)^2} \leq \frac{e^{\lambda b} - 1 - \lambda b}{(\lambda b)^2} \\
+        e^{\lambda X} - 1 - \lambda X \leq \frac{X^2(e^{\lambda b} - 1 - \lambda b)}{b^2} \\
+        e^{\lambda X} \leq 1 + \lambda X + \frac{X^2(e^{\lambda b} - 1 - \lambda b)}{b^2} \\
+        E[e^{\lambda X}] \leq 1 + \lambda E[X] + \frac{E[X^2](e^{\lambda b} - 1 - \lambda b)}{b^2} \\
+        E[X] = 0, \quad E[X^2] = Var[X] = \sigma^2 \therefore \\
+        E[e^{\lambda X}] \leq 1 + \frac{\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2} \\
+        \log(E[e^{\lambda X}]) \leq \log\left(1 + \frac{\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2}\right) \\
+        \log\left(1 + \frac{\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2}\right) \leq \frac{\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2} \therefore \\
+        \log(E[e^{\lambda X}]) \leq \frac{\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2}
+    \end{gather*}
+    \item Now, with $X_1, \dots, X_n$ independent random variables equal in law
+    to $X$, for all $t \geq 0$, we can show that:
+    \[
+        P\left[\sum_{i=1}^n X_i \geq t\right] \leq \exp\left(-\frac{n\sigma^2}{b^2} h\left(\frac{bt}{n\sigma^2}\right)\right)
+    \]
+    where $h(x) = (1+x)\log(1+x) - x$ by using the Chernoff bound. From part (a)
+    and because each $X_i$ is independent and equal in law to $X$, we have:
+    \begin{gather*}
+        E[e^{\lambda \sum_{i=1}^n X_i}] = E\left[\prod_{i=1}^n e^{\lambda X_i}\right] = (E[e^{\lambda X}])^n \\
+        \log E[e^{\lambda \sum_{i=1}^n X_i}] = n \log E[e^{\lambda X}] \leq \frac{n\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2} \therefore \\
+        E[e^{\lambda \sum_{i=1}^n X_i}] \leq \exp\left(\frac{n\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2}\right)
+    \end{gather*}
+    Now using the Chernoff bound, we have:
+    \[
+        P[\sum_{i=1}^n X_i \geq t] \leq \exp\left(-\lambda t + \frac{n\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2}\right) \\
+    \]
+    Minimizing the right-hand side over $\lambda \geq 0$, we have:
+    \begin{gather*}
+        \frac{d}{d\lambda} \left(-\lambda t + \frac{n\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2}\right) = 0 \\
+        -t + \frac{n\sigma^2(e^{\lambda b}b - b)}{b^2} = 0 \therefore \\
+        e^{\lambda b} = 1 + \frac{bt}{n\sigma^2} \therefore \\
+        \lambda^* = \frac{1}{b}\log\left(1 + \frac{bt}{n\sigma^2}\right)
+    \end{gather*}
+    Let $x = \frac{bt}{n\sigma^2}$. Then, we have:
+    \begin{gather*}
+        \lambda^* = \log(1 + x), \quad e^{\lambda^* b} = 1 + x, \quad t = \frac{n\sigma^2 x}{b} \\
+        \therefore \\
+        -\lambda^* t = -\frac{n\sigma^2 x \log(1+x)}{b^2} \\
+        \frac{n\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2} = \frac{n\sigma^2((1+x) - 1 - \log(1+x))}{b^2} = \frac{n\sigma^2(x - \log(1+x))}{b^2} \\
+        \therefore
+    \end{gather*}
+    \begin{align*}
+        -\lambda t + \frac{n\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2} &= -\frac{n\sigma^2 x \log(1+x)}{b^2} + \frac{n\sigma^2(x - \log(1+x))}{b^2} \\
+        -\lambda t + \frac{n\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2} &= -\frac{n\sigma^2}{b^2}(x\log(1 + x) + x - \log(1 + x)) \\
+        -\lambda t + \frac{n\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2} &= -\frac{n\sigma^2}{b^2}((1+x)\log(1+x) - x) \\
+        -\lambda t + \frac{n\sigma^2(e^{\lambda b} - 1 - \lambda b)}{b^2} &= -\frac{n\sigma^2}{b^2} h(x) \\
+    \end{align*}
+    Then finally, substituting back $x = \frac{bt}{n\sigma^2}$, we have:
+    \[
+        P\left[\sum_{i=1}^n X_i \geq t\right] \leq \exp\left(-\frac{n\sigma^2}{b^2} h\left(\frac{bt}{n\sigma^2}\right)\right)
+    \]
+\end{enumerate}
+
 \end{document}
