@@ -282,4 +282,101 @@ sum the geometric series using $r = \frac{|\lambda| b}{3}$:
     \]
 \end{enumerate}
 
+\section{}
+\begin{enumerate}[(a)]
+    \item We can show that if $X_1, \dots, X_n$ are mean-zero and each $X_i$ is
+    $\sigma_i^2$-subgaussian, then without any assumption on their dependence, \\
+    $\sum_{i=1}^n X_i$ is $\sum_{i=1}^n \sigma_i^2$-subgaussian.
+    Let $A = \sum_{i=1}^n \sigma_i$ and weights $w_i = \frac{\sigma_i}{A}$. 
+    Then, we have:
+    \begin{gather*}
+        \sum_{i=1}^n w_i = 1, \quad w_i \geq 0 \\
+        w_i\frac{X_i}{\sigma_i} = \frac{X_i}{A} \therefore \\
+        \sum_{i=1}^n w_i\frac{X_i}{\sigma_i} = \sum_{i=1}^n \frac{X_i}{A} \\
+        \sum_{i=1}^n X_i = A \sum_{i=1}^n w_i\frac{X_i}{\sigma_i} \therefore
+    \end{gather*}
+    Because $w_i \geq 0$ and $\sum_{i=1}^n w_i = 1$, we can use Jensen's inequality
+    and the convexity of $e^x$ to show that:
+    \begin{gather*}
+        e^{\lambda A \sum_{i=1}^n w_i(X_i/\sigma_i)} \leq \sum_{i=1}^n w_i e^{\lambda A (X_i/\sigma_i)} \\
+        E[e^{\lambda A \sum_{i=1}^n X_i}] \leq E\left[\sum_{i=1}^n w_i e^{\lambda A (X_i/\sigma_i)}\right] = \sum_{i=1}^n w_i E[e^{\lambda A (X_i/\sigma_i)}] \\
+    \end{gather*}
+    Since $X_i$ is $\sigma_i^2$-subgaussian, we have:
+    \begin{gather*}
+        E[e^{tX_i}] \leq e^{t^2\sigma_i^2/2}, \text{ if } t = \lambda A / \sigma_i \\
+        E[e^{\lambda A (X_i/\sigma_i)}] \leq e^{(\lambda A / \sigma_i)^2\sigma_i^2/2} = e^{\lambda^2 A^2/2} \\
+        E[e^{\lambda A \sum_{i=1}^n X_i}] \leq \sum_{i=1}^n w_i e^{\lambda^2 A^2/2} = e^{\lambda^2 A^2/2} \\
+    \end{gather*}
+    Recall $A = \sum_{i=1}^n \sigma_i$, so we have:
+    \[
+        E[e^{\lambda \sum_{i=1}^n X_i}] \leq \exp\left(\frac{\lambda^2}{2} \left(\sum_{i=1}^n \sigma_i\right)^2\right)  
+    \]
+    thus $\sum_{i=1}^n X_i$ is $\left(\sum_{i=1}^n \sigma_i\right)^2$-subgaussian.
+    This bound can not be improved in general. Let $\epsilon$ be a Rademacher
+    random variable and let $X_i = \sigma_i \epsilon$. Then, we have:
+    \begin{gather*}
+        \sum_{i=1}^n X_i = \sum_{i=1}^n \sigma_i \epsilon = \left(\sum_{i=1}^n \sigma_i\right) \epsilon \therefore \\
+        Var(S) = \left(\sum_{i=1}^n \sigma_i\right)^2
+    \end{gather*}
+    Any mean-zero random variable is $\sigma^2$-subgaussian if $\sigma^2 \geq Var(X)$, so
+    $\sum_{i=1}^n X_i$ is $\left(\sum_{i=1}^n \sigma_i\right)^2$-subgaussian, and the bound
+    cannot be improved in general.
+    \item Let $k \geq 2$ and $\epsilon_1, \dots, \epsilon_k$ be independent Rademacher 
+    random variables. For every nonempty subset $S \subseteq \{1, \dots, k\}$, let 
+    $X_S = \prod_{i \in S} \epsilon_i$, giving $n = 2^k - 1$ random variables and
+    their respective sum $W = \sum_S X_S$.
+    \begin{enumerate}[i.]
+        \item We can show each $X_S$ is a Rademacher random variable. Picking any
+        $j \in S$, $X_S = \epsilon_j \prod_{i \in S, i \neq j} \epsilon_i$. Since 
+        $\epsilon_j$ is a Rademacher variable, by conditioning on the other $\epsilon_i$'s, 
+        $\prod_{i \in S, i \neq j} \epsilon_i$ is a constant, and thus $X_S$ is 
+        a Rademacher variable. $X_S$ and $X_T$ are independent for any $S \neq T$:
+        \begin{gather*}
+            X_SX_T = \left(\prod_{i \in S} \epsilon_i\right)\left(\prod_{j \in T} \epsilon_j\right) \\
+            X_SX_T = \prod_{i \in S \triangle T} \epsilon_i
+        \end{gather*}
+        Because $S \neq T$, $S \triangle T$ is nonempty, and thus $X_SX_T$ is a Rademacher
+        variable with expectation 0 from the prior proof. Thus, $Cov(X_S, X_T) = E[X_SX_T] - E[X_S]E[X_T] = 0 - 0 = 0$, 
+        and $X_S$ and $X_T$ are uncorrelated, proving their independence.
+        \item Recognize:
+        \begin{gather*}
+            \prod_{i=1}^k (1 + \epsilon_i) = 1 + \sum_{S \subseteq \{1, \dots, k\}} X_S = 1 + W \therefore \\
+            W = \prod_{i=1}^k (1 + \epsilon_i) - 1
+        \end{gather*}
+        Because each $\epsilon_i$ is either $-1$ or 1, a single $\epsilon_i = -1$ 
+        will make the product 0, making $W = -1$. Only if all $\epsilon_i = 1$ 
+        will the product be nonzero, making $W = 2^k - 1 = n$. Since all $\epsilon_i$ 
+        are independent, $P(\epsilon_1 = 1, \dots, \epsilon_k = 1) = P(W = n) = (1/2)^k$,
+        thus $P(W = n) = 1/(n + 1)$. $n$ is also the largest possible value of $W$,
+        so $P(W \geq n) = P(W = n) = 1/(n + 1)$.
+        \item If $W$ were $\sigma^2$-subgaussian, then we would have:
+        \begin{gather*}
+            P(W \geq t) \leq e^{-t^2/(2\sigma^2)} \\
+            P(W \geq n) \leq e^{-n^2/(2\sigma^2)} \therefore \\
+            \frac{1}{n + 1} \leq e^{-n^2/(2\sigma^2)} \\
+            -\log(n + 1) \leq -\frac{n^2}{2\sigma^2} \\
+            \log(n + 1) \geq \frac{n^2}{2\sigma^2} \\
+            \sigma^2 \geq \frac{n^2}{2\log(n + 1)}
+        \end{gather*}
+        Thus, $W$ cannot be $\sigma^2$-subgaussian for any $\sigma^2 < \frac{n^2}{2\log(n + 1)}$.
+        Chebyshev's inequality gives us:
+        \[
+            P(W \geq n) \leq P(|W| \geq n) \leq \frac{Var(W)}{n^2} = \frac{2^k - 1}{n^2} = \frac{n}{n^2} = \frac{1}{n} \\
+        \]
+        overestimating the tail probability by a factor of $\frac{n + 1}{n}$.
+        Hoeffding's inequality gives us:
+        \[
+            P(W \geq n) \leq e^{-2n^2/(4n)} = e^{-n/2} \\
+        \]
+        which overestimates the tail probability by a factor of $(n + 1)e^{-n/2}$.
+        But this is less than 1 for any $n \geq 3$, so it is not a valid upper
+        bound. Pairwise independence is not enough to justify the Hoeffding bound,
+        but gives the correct variance behavior (just not the full subgaussian tail).
+    \end{enumerate}
+\end{enumerate}
+
+\noindent 
+\textbf{AI Usage:} All homework problems were written in VSCode and compiled using LaTeX, with 
+assistance from ChatGPT and Github Copilot inline suggestions.
+
 \end{document}
