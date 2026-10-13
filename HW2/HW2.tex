@@ -1,0 +1,102 @@
+%! Author = Kevin Lin
+%! Date = 10/8/2026
+
+% Preamble
+\documentclass[11pt,a4paper,margin=1in]{article}
+
+% Packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage{pdfpages}
+
+\title{HW 2}
+\author{Kevin Lin}
+\date{10/8/2026}
+
+% Document
+\begin{document}
+\maketitle
+
+\section{}
+\begin{enumerate}[(a)]
+    \item Given $Z_1, \dots, Z_n$ are i.i.d. Bernoulli$(p)$ for $p \leq 1/2$
+    and $t \in (0, 1 - p)$, we can compare the upper bound
+    \[
+        P\left[\frac{1}{n} \sum_{i=1}^{n} Z_i \geq t + p\right]
+    \]
+    between Hoeffding's inequality, Bernstein's inequality, and Bennett's inequality:
+    \begin{itemize}
+        \item \textbf{Hoeffding's inequality:} Since $Z_i \in [0, 1]$, Hoeffding's
+        inequality gives:
+        \[
+            P\left(\frac{1}{n} \sum_{i=1}^{n} Z_i \geq t + p\right) \leq \exp(-2nt^2)
+        \]
+        thus, $R_H = 2nt^2$.
+        \item \textbf{Bernstein's inequality:} Define $X_i = Z_i - p$, then $E[X_i] = 0$ 
+        and $Var(X_i) = p(1 - p)$. Since $|X_i| \leq 1 - p$, Bernstein's inequality gives:
+        \begin{align*}
+            P\left(\sum_{i=1}^{n} X_i \geq nt\right) &\leq \exp\left(-\frac{n^2 t^2}{2np(1 - p) + \frac{2}{3}(1 - p)nt}\right) \\
+            &= \exp\left(-\frac{n^2t^2}{2n(1 - p)(p + t/3)}\right) \\
+            &= \exp\left(-\frac{nt^2}{2(1 - p)(p + t/3)}\right)
+        \end{align*}
+        thus, $R_{\text{Bern}} = \frac{nt^2}{2(1 - p)(p + t/3)}$.
+        \item \textbf{Bennett's inequality:} Using the same $X_i$ as above, Bennett's 
+        inequality gives:
+        \begin{align*}
+            P\left(\sum_{i=1}^{n} X_i \geq nt\right) &\leq \exp\left(-\frac{np(1 - p)}{(1 - p)^2} h\left(\frac{(1 - p)nt}{np(1 - p)}\right)\right) \\
+            &= \exp\left(-\frac{np}{1 - p} h\left(\frac{t}{p}\right)\right)
+        \end{align*}
+        thus, $R_{\text{Benn}} = \frac{np}{1 - p} h\left(\frac{t}{p}\right)$.
+    \end{itemize}
+    \item We can compute $R_{\text{Bern}}/R_H$ using $(a)$:
+    \[
+        \frac{R_{\text{Bern}}}{R_H} = \frac{\frac{nt^2}{2(1 - p)(p + t/3)}}{2nt^2} = \frac{1}{4(1 - p)(p + t/3)}
+    \]
+    We can see if Bernstein's bound improves over Hoeffding's more than a constant
+    factor if $R_{\text{Bern}}/R_H \to \infty$ as $n \to \infty$. Since $p \leq \frac{1}{2}$,
+    $\frac{1}{2} \leq 1 - p \leq 1$, so $1 - p$ is bounded away from 0. For the
+    ratio to approach infinity, we need $p + t/3 \to 0$ as $n \to \infty$. This
+    only occurs when $p \to 0$ and $t \to 0$ as $n \to \infty$. Thus, Bernstein's 
+    bound improves over Hoeffding's more than a constant factor when $p \to 0$ and 
+    $t \to 0$ as $n \to \infty$.
+    \item $R_{\text{Benn}}/R_{\text{Bern}}$ depends on $(p, t)$ only through $x = t/p$:
+    \begin{align*}
+        \frac{R_{\text{Benn}}}{R_{\text{Bern}}} &= \frac{\frac{np}{1 - p} h\left(\frac{t}{p}\right)}{\frac{nt^2}{2(1 - p)(p + t/3)}} = \frac{2p(p + t/3)}{t^2} h\left(\frac{t}{p}\right) \\
+        &= \frac{2p(p + px/3)}{p^2 x^2} h(x) = \frac{2(1 + x/3)}{x^2} h(x)
+    \end{align*}
+    Bennett's bound is never than Bernstein's since this ratio is always greater than 1:
+    \begin{align*}
+        \frac{2(1 + x/3)}{x^2} h(x) &\geq 1 \\
+        h(x) &\geq \frac{x^2}{2(1 + x/3)} \\
+        \text{Let } f(x) &= h(x) - \frac{x^2}{2(1 + x/3)} \\
+        h(x) &= (1 + x)\log(1 + x) - x \therefore \\
+        h'(x) &= \log(1 + x), h''(x) = \frac{1}{1 + x} \therefore \\
+        f''(x) &= \frac{1}{1 + x} - \frac{1}{(1 + x/3)^3} \geq 0 
+    \end{align*}
+    Since $f(0) = 0, f'(0) = 0, f''(x) \geq 0$, $f(X) \geq 0$ for all $x \geq 0$. 
+    Therefore, $h(x) \geq \frac{x^2}{2(1 + x/3)}$, and substituting this into the ratio gives:
+    \[
+        \frac{2(1 + x/3)}{x^2} h(x) \geq \frac{2(1 + x/3)}{x^2} \cdot \frac{x^2}{2(1 + x/3)} = 1
+    \]
+    thus, Bennett's bound is never worse than Bernstein's. \\
+    As $x \to 0$, the taylor expansion of $h(x)$ gives $h(x) = \frac{x^2}{2} - \frac{x^3}{6} + O(x^4)$, so
+    \[
+        \frac{2(1 + x/3)}{x^2} h(x) = \frac{2(1 + x/3)}{x^2} \left(\frac{x^2}{2} - \frac{x^3}{6} + O(x^4)\right) = 1 + O(x)
+    \]
+    Thus, as $x \to 0$, the ratio approaches 1, and Bennett's bound is asymptotically 
+    equivalent to Bernstein's. \\
+    As $x \to \infty$, the taylor expansion of $h(x)$ gives $h(x) = x\log(x) - x + O(\log(x)) \sim x\log(x)$, so
+    \[
+        \frac{2(1 + x/3)}{x^2} h(x) = \frac{2(1 + x/3)}{x^2} (x\log(x)) \sim \frac{2}{3}\log(x) = \infty
+    \]
+    Thus, as $x \to \infty$, the ratio approaches infinity, and Bennett's bound is 
+    asymptotically better than Bernstein's.
+
+\end{enumerate}
+
+\noindent 
+\textbf{AI Usage:} All homework problems were written in VSCode and compiled using LaTeX, with 
+assistance from ChatGPT and Github Copilot inline suggestions.
+
+\end{document}
