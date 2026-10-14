@@ -25,16 +25,29 @@
     \[
         P\left[\frac{1}{n} \sum_{i=1}^{n} Z_i \geq t + p\right]
     \]
-    between Hoeffding's inequality, Bernstein's inequality, and Bennett's inequality:
+    between Hoeffding's inequality, Bernstein's inequality, and Bennett's inequality.
+    First, define $X_i = Z_i - p$, consequently, $E[Z_i] = p, Var(Z_i) = p(1 - p)$,
+    and thus $E[X_i] = 0, Var(X_i) = p(1 - p)$. By this same definition, we can derive
+    that 
+    \[
+        P\left(\frac{1}{n} \sum_{i=1}^n Z_i \geq t + p \right) = P\left(\sum_{i=1}^n X_i \geq nt\right)
+    \]
+    Now for each inequality:
     \begin{itemize}
-        \item \textbf{Hoeffding's inequality:} Since $Z_i \in [0, 1]$, Hoeffding's
+        \item \textbf{Hoeffding's inequality:} Hoeffding's
         inequality gives:
-        \[
+        \begin{gather*}
+            P\left(\sum_{i=1}^{n} X_i \geq s) \leq \exp(-\frac{2s^2}{n})\right), \quad s = nt \therefore \\
             P\left(\frac{1}{n} \sum_{i=1}^{n} Z_i \geq t + p\right) \leq \exp(-2nt^2)
-        \]
+        \end{gather*}
         thus, $R_H = 2nt^2$.
-        \item \textbf{Bernstein's inequality:} Define $X_i = Z_i - p$, then $E[X_i] = 0$ 
-        and $Var(X_i) = p(1 - p)$. Since $|X_i| \leq 1 - p$, Bernstein's inequality gives:
+        \item \textbf{Bernstein's inequality:} Using $X_i$, since $Z_i \in \{0, 1\}$,
+        $X_i \in \{-p, 1 - p\}$. Because $p \leq 1/2$, $|X_i| \leq 1 - p$, and 
+        that $\sum_{i=1}^n Var(X_i) = np(1 - p)$, Bernstein's inequality gives:
+        \[
+            P\left(\sum_{i=1}^{n} X_i \geq s\right) \leq \exp\left(-\frac{s^2}{2(v + bs/3)}\right)
+        \]
+        Again, let $s = nt$, with $v = np(1 - p)$ and $b = 1 - p$, we have:
         \begin{align*}
             P\left(\sum_{i=1}^{n} X_i \geq nt\right) &\leq \exp\left(-\frac{n^2 t^2}{2np(1 - p) + \frac{2}{3}(1 - p)nt}\right) \\
             &= \exp\left(-\frac{n^2t^2}{2n(1 - p)(p + t/3)}\right) \\
@@ -44,6 +57,7 @@
         \item \textbf{Bennett's inequality:} Using the same $X_i$ as above, Bennett's 
         inequality gives:
         \begin{align*}
+            P\left(\sum_{i=1}^{n} X_i \geq s\right) &\leq \exp\left(-\frac{v}{b^2} h\left(\frac{bs}{v}\right)\right), \text{ using } s,v,b \therefore \\
             P\left(\sum_{i=1}^{n} X_i \geq nt\right) &\leq \exp\left(-\frac{np(1 - p)}{(1 - p)^2} h\left(\frac{(1 - p)nt}{np(1 - p)}\right)\right) \\
             &= \exp\left(-\frac{np}{1 - p} h\left(\frac{t}{p}\right)\right)
         \end{align*}
@@ -74,7 +88,8 @@
         h'(x) &= \log(1 + x), h''(x) = \frac{1}{1 + x} \therefore \\
         f''(x) &= \frac{1}{1 + x} - \frac{1}{(1 + x/3)^3} \geq 0 
     \end{align*}
-    Since $f(0) = 0, f'(0) = 0, f''(x) \geq 0$, $f(X) \geq 0$ for all $x \geq 0$. 
+    For all $x \geq 0$, $(1 + x/3)^3 \geq 1 + x$, so $f''(x) \geq 0$, then $f'(x) \geq 0$ 
+    also. With $f(0) = 0, f'(0) = 0$, we have $f(x) \geq 0$ for all $x \geq 0$. 
     Therefore, $h(x) \geq \frac{x^2}{2(1 + x/3)}$, and substituting this into the ratio gives:
     \[
         \frac{2(1 + x/3)}{x^2} h(x) \geq \frac{2(1 + x/3)}{x^2} \cdot \frac{x^2}{2(1 + x/3)} = 1
@@ -82,7 +97,7 @@
     thus, Bennett's bound is never worse than Bernstein's. \\
     As $x \to 0$, the taylor expansion of $h(x)$ gives $h(x) = \frac{x^2}{2} - \frac{x^3}{6} + O(x^4)$, so
     \[
-        \frac{2(1 + x/3)}{x^2} h(x) = \frac{2(1 + x/3)}{x^2} \left(\frac{x^2}{2} - \frac{x^3}{6} + O(x^4)\right) = 1 + O(x)
+        \frac{2(1 + x/3)}{x^2} h(x) = \frac{2(1 + x/3)}{x^2} \left(\frac{x^2}{2} - \frac{x^3}{6} + O(x^4)\right) = 1 + \frac{x^2}{18} + O(x)
     \]
     Thus, as $x \to 0$, the ratio approaches 1, and Bennett's bound is asymptotically 
     equivalent to Bernstein's. \\
@@ -92,8 +107,61 @@
     \]
     Thus, as $x \to \infty$, the ratio approaches infinity, and Bennett's bound is 
     asymptotically better than Bernstein's.
-
 \end{enumerate}
+
+\section{}
+We are given the $\psi_\alpha$ Orlicz norm of a random variable $X$ defined as:
+\[
+    ||X||_{\psi_\alpha} = \inf\left\{K > 0 : E\left[\psi_\alpha \left(\frac{|X|}{K}\right)\right] \leq 1\right\}
+\]
+where $\alpha > 1$ and $\psi_\alpha(x) = e^{x^\alpha} - 1$. Using this, the
+Orlicz norm can be rewritten as:
+\[
+    ||X||_{\psi_\alpha} = \inf\left\{K > 0 : E\left[e^{|X|^\alpha/K^\alpha}\right] \leq 2\right\}
+\]
+Suppose $||X||_{\psi_\alpha} < \infty$. By the definition of the infimum,
+there exists a finite $K > 0$ where $E[e^{|X|^\alpha/K^\alpha}] \leq 2$. Then, 
+for any $t > 0$, using Markov's inequality to the nonnegative random variable,
+we get that $Y = e^{|X|^\alpha/K^\alpha}$. This gives:
+\begin{align*}
+    P(|X| \geq t) &= P(e^{|X|^\alpha/K^\alpha} \geq e^{t^\alpha/K^\alpha}) \\
+    &\leq \frac{E[e^{|X|^\alpha/K^\alpha}]}{e^{t^\alpha/K^\alpha}} \\
+    &\leq 2 e^{-t^\alpha/K^\alpha}
+\end{align*}
+Choosing $C = 2$ and $c = 1/K^\alpha$, we have that $P(|X| \geq t) \leq C e^{-ct^\alpha}$.
+Thus, $||X||_{\psi_\alpha} < \infty$ implies that there exists a $C, c > 0$ such 
+that $P(|X| \geq t) \leq C e^{-ct^\alpha}$. \\
+
+\noindent
+Now, we want to show that there exists a finite $K > 0$ such that $E[e^{|X|^\alpha/K^\alpha}] \leq 2$ 
+if there exists a $C, c > 0$ such that $P(|X| \geq t) \leq C e^{-ct^\alpha}$. Let
+$Y = |X|^\alpha \geq 0$, then for any $u \geq 0$:
+\begin{align*}
+    P(Y \geq u) &= P(|X|^\alpha \geq u) = P(|X| \geq u^{1/\alpha}) \\
+    &\leq C e^{-c(u^{1/\alpha})} = C e^{-c u}
+\end{align*}
+For any $a > 0$, $e^{aY} = 1 + \int_0^Y a e^{au} du$. The tail integration identity
+for nonnegative random variables gives us that $E[e^{aY}] = 1 + \int_0^\infty a e^{au} P(Y \geq u) du$. 
+Using the tail bound on $P(Y \geq u)$, we have:
+\begin{align*}
+    E[e^{aY}] &\leq 1 + \int_0^\infty a e^{au} C e^{-cu} du \\
+    &= 1 + aC \int_0^\infty e^{-(c - a)u} du \\
+    &= 1 + \frac{aC}{c - a}
+\end{align*}
+Then if we choose $a = \frac{c}{C + 1}$, since $C, c > 0$, $0 < a < c$, and we have:
+\begin{align*}
+    E[e^{aY}] &\leq 1 + \frac{C(\frac{c}{C + 1})}{c - \frac{c}{C + 1}} \\
+    &= 1 + \frac{\frac{Cc}{C + 1}}{\frac{cC}{C + 1}} \\
+    &= 1 + 1 = 2
+\end{align*}
+Thus, $E[e^{aY}] \leq 2$. Recall that $Y = |X|^\alpha$, so we choose $K > 0$
+such that $\frac{1}{K^\alpha} = a = \frac{c}{C + 1}$, and solving for $K$
+gives us $K = \left(\frac{C + 1}{c}\right)^{1/\alpha}$. Then we have that
+$E[e^{|X|^\alpha/K^\alpha}] \leq 2$, and then by the definition of the Orlicz norm,
+there exists a finite $K > 0$. Because both implications hold, we have that:
+\[
+    ||X||_{\psi_\alpha} < \infty \iff \exists C, c > 0 : P(|X| \geq t) \leq C e^{-ct^\alpha} \quad \forall t \geq 0
+\]
 
 \noindent 
 \textbf{AI Usage:} All homework problems were written in VSCode and compiled using LaTeX, with 
