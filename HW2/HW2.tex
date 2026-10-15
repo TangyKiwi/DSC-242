@@ -163,6 +163,115 @@ there exists a finite $K > 0$. Because both implications hold, we have that:
     ||X||_{\psi_\alpha} < \infty \iff \exists C, c > 0 : P(|X| \geq t) \leq C e^{-ct^\alpha} \quad \forall t \geq 0
 \]
 
+\section{}
+From the definiton of the $\psi_\alpha$ Orlicz norm, we have that:
+\[
+    ||X||_{\psi_\alpha} = \inf\left\{K > 0 : E\left[e^{|X|^\alpha/K^\alpha}\right] \leq 2\right\}
+\]
+Define:
+\[
+    \beta = \frac{\alpha}{\alpha - 1} > 2 \therefore \frac{1}{\alpha} + \frac{1}{\beta} = 1, \beta(\alpha - 1) = \alpha
+\]
+By taking the Taylor expansion of the MGF $M(\lambda) = E[e^{\lambda Xi}]$, we have:
+\begin{align*}
+    e^{\lambda X_i} &\leq 1 + \lambda X_i + \frac{\lambda^2 |X_i|^2}{2} e^{|\lambda X_i|} \\
+    E[e^{\lambda X_i}] &\leq 1 + \lambda E[X_i] + \frac{\lambda^2}{2} E[|X_i|^2 e^{|\lambda X_i|}] \\
+    &\leq 1 + \frac{\lambda^2}{2} E[|X_i|^2 e^{|\lambda X_i|}], \lambda \in [0, 1] \therefore e^{\lambda X_i} \leq e^{|X_i|} \therefore \\
+    E[e^{\lambda X_i}] &\leq 1 + \frac{\lambda^2}{2} E[X_i^2 e^{|X_i|}]
+\end{align*}
+We now need to bound $E[X_i^2 e^{|X_i|}]$. We want to find constant $C > 0$ such
+that $X_i^2 e^{|X_i|} \leq C e^{|X_i|^\alpha/K^\alpha}$, rearrangeing gives:
+\[
+    X_i^2 e^{|X_i| - |X_i|^\alpha/K^\alpha} \leq C
+\]
+Because $\alpha > 1$, we have that $|X_i| - |X_i|^\alpha/K^\alpha \to -\infty$ as 
+$|X_i| \to \infty$, then $X_i^2 e^{|X_i| - |X_i|^\alpha/K^\alpha} \to 0$ as 
+$|X_i| \to \infty$. Then, there exists some constant $C > 0$ such that 
+$X_i^2 e^{|X_i| - |X_i|^\alpha/K^\alpha} \leq C$ for all $|X_i| \geq 0$. Then, we 
+have that:
+\begin{align*}
+    E[X_i^2 e^{|X_i|}] &\leq C E[e^{|X_i|^\alpha/K^\alpha}] \\
+    &\leq 2C, \therefore \\
+    E[e^{\lambda X_i}] &\leq 1 + \frac{\lambda^2}{2} 2C \leq e^{C\lambda^2}, \lambda \in [0, 1] \\
+    \log E[e^{\lambda X_i}] &\leq C \lambda^2, \lambda \in [0, 1] \\
+\end{align*}
+
+\noindent
+Now we bound the MGF for $\lambda > 1$. Using Young's inequality, we have:
+\[
+    ab \leq \frac{a^\alpha}{\alpha} + \frac{b^\beta}{\beta}
+\]
+Choosing $a = \frac{\alpha^{1/\alpha}|X_i|}{K}$ and $b = \frac{\lambda K}{\alpha^{1/\alpha}}$, 
+we have:
+\begin{align*}
+    ab &= \lambda |X_i| \\
+    \lambda |X_i| &\leq \frac{|X_i|^\alpha}{K^\alpha} + \frac{\lambda^\beta K^\beta}{\beta \alpha^{\beta/\alpha}} \\
+\end{align*}
+Let $C = \frac{K^\beta}{\beta \alpha^{\beta/\alpha}}$, then we have:
+\begin{align*}
+    \lambda |X_i| &\leq \frac{|X_i|^\alpha}{K^\alpha} + C \lambda^\beta \\
+    e^{\lambda |X_i|} &\leq e^{|X_i|^\alpha/K^\alpha} e^{C \lambda^\beta} \\
+    E[e^{\lambda |X_i|}] &\leq E[e^{|X_i|^\alpha/K^\alpha}] e^{C \lambda^\beta} \\
+    &\leq 2 e^{C \lambda^\beta}, \text{ collapse constants}\therefore \\
+    \log E[e^{\lambda |X_i|}] &\leq (\log 2 + C) \lambda^\beta, \lambda > 1, \beta = \frac{\alpha}{\alpha - 1}, \therefore \\
+    \log E[e^{\lambda X_i}] &\leq C \lambda^{\alpha/(\alpha - 1)}, \lambda > 1 \\
+\end{align*}
+
+\noindent
+Now, we can combine the two bounds on the MGF for $\lambda \in [0, 1]$ and $\lambda > 1$,
+and establish some constant $C > 0$ that depends only on $K, \alpha$, such that:
+\[
+    \log E[e^{\lambda X_i}] \leq C(\lambda^2 + \lambda^\beta) \forall \lambda \geq 0
+\]
+Let $S_n = \sum_{i=1}^n X_i$, then by Markov's inequality, and $X_i$ independence, 
+we have:
+\begin{align*}
+    P\left(\frac{S_n}{n} \geq t\right) &= P\left(e^{\lambda S_n} \geq e^{\lambda nt}\right) \\
+    &\leq \frac{E[e^{\lambda S_n}]}{e^{\lambda nt}} \\
+    \log E[e^{\lambda S_n}] &= \log E[e^{\lambda \sum_{i=1}^n X_i}] = \log \prod_{i=1}^n E[e^{\lambda X_i}] = \sum_{i=1}^n \log E[e^{\lambda X_i}] \\
+    &\leq \sum_{i=1}^n C(\lambda^2 + \lambda^\beta) = nC(\lambda^2 + \lambda^\beta) \\
+\end{align*}
+Thus, we have:
+\[
+    P\left(\frac{S_n}{n} \geq t\right) \leq \exp(nC(\lambda^2 + \lambda^\beta) - \lambda nt)
+\]
+\begin{itemize}
+    \item \textbf{$0 < t \leq 1$:}
+    Choose some $\lambda = \delta t$, where $\delta > 0$ and is sufficiently small
+    depending only on $C, \beta$. Then we have:
+    \begin{align*}
+        P\left(\frac{S_n}{n} \geq t\right) &\leq \exp(nC(\delta^2t^2 + \delta^\beta t^\beta) - \delta n t^2) \\
+        &= \exp(n(C\delta^2 - \delta)t^2 + nC\delta^\beta t^\beta) \\
+        &\beta > 2, 0 < t \leq 1, \therefore t^\beta \leq t^2, \\
+        &\leq \exp(n(\delta^2 - C\delta^2 - C\delta^\beta)t^2), \text{ collapse constants} \\
+        &\leq \exp(-c_1 nt^2), \text{ for some } c_1 > 0, \text{ sufficiently small } \delta
+    \end{align*}
+    \item \textbf{$t > 1$:}
+    Choose some $\lambda = \delta t^{\alpha - 1}$, again with sufficiently small $\delta$:
+    \begin{align*}
+        P\left(\frac{S_n}{n} \geq t\right) &\leq \exp(nC(\delta^2 t^{2(\alpha - 1)} + \delta^\beta t^{\beta(\alpha - 1)}) - \delta n t^\alpha) \\
+        &= \exp(n(C\delta^2 t^{2(\alpha - 1)} + C\delta^\beta t^\alpha) - \delta n t^\alpha) \\
+        &= \exp(n(C\delta^2 t^{2(\alpha - 1)} + (C\delta^\beta - \delta) t^\alpha)) \\
+        &t > 1, 2(\alpha - 1) < \alpha, \therefore t^{2(\alpha - 1)} < t^\alpha, \\
+        &\leq \exp(n(C\delta^2 + C\delta^\beta - \delta)t^\alpha), \text{ collapse constants} \\
+        &\leq \exp(-c_2 nt^\alpha), \text{ for some } c_2 > 0, \text{ sufficiently small } \delta
+    \end{align*}
+\end{itemize}
+
+\noindent
+Now combine both cases, and we have that for some constants $c_1, c_2 > 0$:
+\begin{itemize}
+    \item \textbf{For $0 < t \leq 1$:} $\min(t^2, t^\alpha) = t^2$
+    \item \textbf{For $t > 1$:} $\min(t^2, t^\alpha) = t^\alpha$
+\end{itemize}
+\begin{align*}
+    P\left(\frac{1}{n} \sum_{i=1}^n X_i \geq t\right) &\leq \begin{cases}
+        e^{-cnt^2}, & 0 < t \leq 1 \\
+        e^{-cnt^\alpha}, & t > 1
+    \end{cases} \\
+    P\left(\frac{1}{n} \sum_{i=1}^n X_i \geq t\right) &\leq C\exp\left(-cn\min(t^2, t^\alpha)\right), \quad \forall t > 0
+\end{align*}
+
 \noindent 
 \textbf{AI Usage:} All homework problems were written in VSCode and compiled using LaTeX, with 
 assistance from ChatGPT and Github Copilot inline suggestions.
