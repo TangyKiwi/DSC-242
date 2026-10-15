@@ -272,6 +272,74 @@ Now combine both cases, and we have that for some constants $c_1, c_2 > 0$:
     P\left(\frac{1}{n} \sum_{i=1}^n X_i \geq t\right) &\leq C\exp\left(-cn\min(t^2, t^\alpha)\right), \quad \forall t > 0
 \end{align*}
 
+\section{}
+For any $G \sim \mathcal{N}(0, I_n)$ and for any fixed $v \in \mathbb{R}^n$,
+$E_G[e^{v^\top G}] = e^{||v||_2^2/2}$. Conditioning on $X$, choose $v = \sqrt{2}\lambda B X$.
+Since $BX \in \mathbb{R}^n$, the Gaussian MGF identity gives:
+\begin{align*}
+    E_G[e^{\sqrt{2}\lambda (BX)^\top G} | X] &= e^{||\sqrt{2}\lambda BX||_2^2/2} \\
+    &= e^{\lambda^2 ||BX||_2^2} \\
+    E_X[e^{\lambda^2 ||BX||_2^2}] &= E_X[E_G[e^{\sqrt{2}\lambda (BX)^\top G} | X]] \\
+    &= E_G[E_X[e^{\sqrt{2}\lambda (BX)^\top G} | G]] \\
+\end{align*}
+
+\noindent
+Since $X$ is $\sigma^2$-subgaussian, for any deterministic $u \in \mathbb{R}^d$,
+$E[e^{u^\top X}] \leq e^{\sigma^2 ||u||_2^2/2}$. Conditioning on $G$, $B^\top G$
+is fixed, so we can therefore choose $u = \sqrt{2}\lambda B^\top G$ and apply
+the subgaussian property:
+\begin{align*}
+    E_X[e^{\sqrt{2}\lambda (BX)^\top G} | G] &= E_X[e^{\sqrt{2}\lambda X^\top B^\top G} | G] \\
+    &\leq e^{\sigma^2 ||\sqrt{2}\lambda B^\top G||_2^2/2} \\
+    &= e^{\sigma^2 \lambda^2 ||B^\top G||_2^2} \therefore \\
+    E[e^{\lambda^2 ||BX||_2^2}] &\leq E_G[e^{\sigma^2 \lambda^2 ||B^\top G||_2^2}]
+\end{align*}
+which establishes the first inequality with $C = 1$. \\
+
+Now we bound $E[e^{\lambda^2 \sigma^2 ||B^\top G||_2^2}]$. Let the SVD of $B$
+be $B = U \Sigma V^\top$, where $U$ and $V$ are orthogonal matrices and $\Sigma$ 
+is a diagonal matrix with singular values $s_1, \dots, s_r$ on the diagonal and 
+$r = rank(B)$. Then we have:
+\[
+    B^\top G = V \Sigma^\top U^\top G, \text{ since } U^\top G \sim \mathcal{N}(0, I_n) \text{ and } V \text{ is orthogonal}
+\]
+Therefore,
+\[
+    ||B^\top G||_2^2 = ||\Sigma^\top U^\top G||_2^2 = \sum_{i=1}^r s_i^2 (U^\top G)_i^2 = \sum_{i=1}^r s_i^2 g_i^2
+\]
+Consequently by independence,
+\[
+    E[e^{\lambda^2 \sigma^2 ||B^\top G||_2^2}] = E[e^{\lambda^2 \sigma^2 \sum_{i=1}^r s_i^2 g_i^2}] = \prod_{i=1}^r E[e^{\lambda^2 \sigma^2 s_i^2 g_i^2}] \\
+\]
+
+\noindent
+Now, for a standard Gaussian $g \sim \mathcal{N}(0, 1)$, we have that 
+$E[e^{a g^2}] = (1 - 2a)^{-1/2}$ for $a < 1/2$. Let $a = \lambda^2 \sigma^2 s_i^2$, 
+then we have:
+\begin{align*}
+    E[e^{\lambda^2 \sigma^2 s_i^2 g_i^2}] &= (1 - 2\lambda^2 \sigma^2 s_i^2)^{-1/2} \\
+    E[e^{\lambda^2 \sigma^2 ||B^\top G||_2^2}] &= \prod_{i=1}^r (1 - 2\lambda^2 \sigma^2 s_i^2)^{-1/2} \\
+    \log E[e^{\lambda^2 \sigma^2 ||B^\top G||_2^2}] &= -\frac{1}{2} \sum_{i=1}^r \log(1 - 2\lambda^2 \sigma^2 s_i^2)
+\end{align*}
+We can use the inequality $-\log(1 - u) \leq 2u$ for $u \in [0, 1/2]$, and choose
+$\lambda$ such that $|\lambda| \leq \frac{1}{2\sigma ||B||_\text{op}}$, with
+the fact that all $s_i \leq ||B||_\text{op}$, then 
+$2\lambda^2 \sigma^2 s_i^2 \leq 1/2$ for all $i$. Then, we can collapse:
+\begin{align*}
+    \log E[e^{\lambda^2 \sigma^2 ||B^\top G||_2^2}] &\leq -\frac{1}{2} \sum_{i=1}^r 2(2\lambda^2 \sigma^2 s_i^2) \\
+    &= \sum_{i=1}^r 2\lambda^2 \sigma^2 s_i^2 = 2\lambda^2 \sigma^2 ||B||_F^2 \\
+    E[e^{\lambda^2 \sigma^2 ||B^\top G||_2^2}] &\leq e^{2\lambda^2 \sigma^2 ||B||_F^2}
+\end{align*}
+which establishes the second inequality with $C' = 2$. \\
+
+\noindent
+Thus, we can combine the inequalities to show:
+\[
+    E[e^{\lambda^2 ||BX||_2^2}] \leq E[e^{\lambda^2 \sigma^2 ||B^\top G||_2^2}] \leq e^{2\lambda^2 \sigma^2 ||B||_F^2}, \quad |\lambda| \leq \frac{1}{2\sigma ||B||_\text{op}}
+\]
+with constants $C = 1, C' = 2, c = \frac{1}{2}$. If $B = 0$ or $\sigma = 0$,
+then the inequalities hold trivially (=1). \\
+
 \noindent 
 \textbf{AI Usage:} All homework problems were written in VSCode and compiled using LaTeX, with 
 assistance from ChatGPT and Github Copilot inline suggestions.
