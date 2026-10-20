@@ -1,0 +1,63 @@
+%! Author = Kevin Lin
+%! Date = 10/15/2026
+
+% Preamble
+\documentclass[11pt,a4paper,margin=1in]{article}
+
+% Packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage{pdfpages}
+
+\title{HW 3}
+\author{Kevin Lin}
+\date{10/15/2026}
+
+% Document
+\begin{document}
+\maketitle
+
+\section{}
+Let $S = \sum_{i=1}^n X_i$, and $S_\epsilon = \sum_{i=1}^n \epsilon X_i$. The
+Rademacher symmetrization lemma states that if $X_1, \ldots, X_n$ are independent 
+mean zero random variables and $F:[0,\infty)\to\mathbb R$ is convex and 
+increasing, then for $\epsilon_1, \ldots, \epsilon_n$ independent Rademacher 
+random variables, we have: 
+\[
+    E\left[F\left(\frac{1}{2}\left|\sum_{i=1}^n \epsilon_i X_i\right|\right)\right] \leq E\left[F\left(\left|\sum_{i=1}^n X_i\right|\right)\right] \leq E\left[F\left(2\left|\sum_{i=1}^n \epsilon_i X_i\right|\right)\right]
+\]
+We will use the definition of a subgaussian norm:
+\[
+    ||Y||_{\psi_2} = \inf\{K>0: E[\exp(Y^2/K^2)] \leq 2\}
+\]
+First, define an upper bound. Let $K_\epsilon = ||S_\epsilon||_{\psi_2}$. Then,
+for any $K > K_\epsilon$, we have $E[\exp(S_\epsilon^2/K^2)] \leq 2$. Choose 
+$F(t) = \exp(t^2/(2K)^2)$, which is convex and increasing. Then, by the Rademacher
+symmetrization lemma (right hand side), we have:
+\[
+    E\left[\exp\left(\frac{S^2}{(2K)^2}\right)\right] \leq E\left[\exp\left(\frac{(2|S_\epsilon|)^2}{(2K)^2}\right)\right] = E\left[\exp\left(\frac{S_\epsilon^2}{K^2}\right)\right] \leq 2
+\]
+Then, by the definition of the subgaussian norm, we have $||S||_{\psi_2} \leq 2K$.
+Since this holds for every $K > K_\epsilon$, we have $||S||_{\psi_2} \leq 2||S_\epsilon||_{\psi_2}$,
+and we take $C = 2$. \\
+\noindent
+Now, define a lower bound. Let $K = ||S||_{\psi_2}$. Then, for any $L > K$, we 
+have $E[\exp(S^2/L^2)] \leq 2$. Choose $F(t) = \exp(t^2/L^2)$, which is convex 
+and increasing. Then, by the Rademacher symmetrization lemma (left hand side), we have:
+\[
+    E\left[\exp\left(\frac{(1/2)|S_\epsilon|^2}{L^2}\right)\right] = E\left[\exp\left(\frac{|S_\epsilon|^2}{(2L)^2}\right)\right] \leq E\left[\exp\left(\frac{S^2}{L^2}\right)\right] \leq 2
+\]
+Then, $||S_\epsilon||_{\psi_2} \leq 2L$. Since this holds for every $L > K$, we have
+$||S_\epsilon||_{\psi_2} \leq 2||S||_{\psi_2}$, which rearranges to 
+$\frac{1}{2}||S_\epsilon||_{\psi_2} \leq ||S||_{\psi_2}$, and we take $c = 1/2$.
+Thus, we can combine the two bounds to get:
+\begin{gather*}
+    \frac{1}{2}||S_\epsilon||_{\psi_2} \leq ||S||_{\psi_2} \leq 2||S_\epsilon||_{\psi_2} \\
+    \frac{1}{2}\left\|\sum_{i=1}^n \epsilon_i X_i\right\|_{\psi_2} \leq \left\|\sum_{i=1}^n X_i\right\|_{\psi_2} \leq 2\left\|\sum_{i=1}^n \epsilon_i X_i\right\|_{\psi_2}
+\end{gather*}
+where $c = 1/2$ and $C = 2$.
+
+\section{}
+
+\end{document}
