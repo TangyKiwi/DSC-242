@@ -59,5 +59,112 @@ Thus, we can combine the two bounds to get:
 where $c = 1/2$ and $C = 2$.
 
 \section{}
+\begin{enumerate}[(a)]
+    \item We substitute $\beta^*$ into the Dantzig selector and get $\|\frac{1}{n}X^T(y - X\beta^*)\|_\infty$.
+    Since the linear model is $y = X\beta^* + \epsilon$, we can substitute this in
+    as well to get $\|\frac{1}{n}X^T(X\beta^* + \epsilon - X\beta^*)\|_\infty = \|\frac{1}{n}X^T\epsilon\|_\infty \leq \lambda$.
+    The last inequality holds by the given assumption, thus $\beta^*$ is a feasible solution.
+    By definition, $\hat{\beta}_D = \arg\min_{\beta \in \mathcal{F}}\|\beta\|_1$, 
+    where the feasible set $\mathcal{F} = \{\beta \in \mathbb{R}^p: \|\frac{1}{n}X^T(y - X\beta)\|_\infty \leq \lambda\}$.
+    We know that $\beta^* \in \mathcal{F}$, and since $\hat{\beta}_D$ is the 
+    minimizer of the $\ell_1$ norm over the feasible set, its objective value has
+    to be less than or equal to the objective value at any other feasible vector,
+    including $\beta^*$, thus, we have $\|\hat{\beta}_D\|_1 \leq \|\beta^*\|_1$.
+    \item Let $\Delta = \hat{\beta}_D - \beta^*$, $S = \text{supp}(\beta^*)$, and 
+    $|S| = \kappa$. We can rewrite $\hat{\beta}_D = \beta^* + \Delta$, and from
+    (a), we get $\|\beta^* + \Delta\|_1 \leq \|\beta^*\|_1$. Because $S = \text{supp}(\beta^*)$, 
+    we know that $\beta^*_{S^c} = 0$, and thus we can rewrite the $\ell_1$ norm as
+    $\|\beta^* + \Delta\|_1 = \|\beta^*_S + \Delta_S\|_1 + \|\beta^*_{S^c} + \Delta_{S^c}\|_1 = \|\beta^*_S + \Delta_S\|_1 + \|\Delta_{S^c}\|_1$. 
+    Thus, $\|\beta^*_S + \Delta_S\|_1 + \|\Delta_{S^c}\|_1 \leq \|\beta^*\|_1$.
+    With the reverse triangle inequality, we have $\|\beta^*_S + \Delta_S\|_1 \geq \|\beta^*_S\|_1 - \|\Delta_S\|_1$.
+    Substituting this into the previous inequality, we have $\|\beta^*_S\|_1 - \|\Delta_S\|_1 + \|\Delta_{S^c}\|_1 \leq \|\beta^*\|_1$.
+    Then, we get $-\|\Delta_S\|_1 + \|\Delta_{S^c}\|_1 \leq 0$, which rearranges to 
+    $\|\Delta_{S^c}\|_1 \leq \|\Delta_S\|_1$, proving the cone condition.
+
+    We can bound the $\ell_1$ norm since $S$ and $S^c$ partition the coordinates,
+    where $\|\Delta\|_1 = \|\Delta_S\|_1 + \|\Delta_{S^c}\|_1 \leq \|\Delta_S\|_1 + \|\Delta_S\|_1 = 2\|\Delta_S\|_1$.
+    Then, we can bound $\|\Delta_S\|_1$ using the Cauchy-Schwarz inequality and the
+    fact that $|S| = \kappa$:
+    \begin{align*}
+        \|\Delta_S\|_1 &= \sum_{i \in S}|\Delta_i| \\
+        &\leq \sqrt{\sum_{i \in S}1^2}\sqrt{\sum_{i \in S}|\Delta_i|^2} \\
+        &= \sqrt{\kappa}\|\Delta_S\|_2
+    \end{align*}
+    $\|\Delta_S\|_2 \leq \|\Delta\|_2$, because the squared Euclidean norm over
+    the subset of coordinates cannot exceed the squared Euclidean norm over all coordinates. 
+    Thus, combining the inequalities, we have:
+    \begin{align*}
+        \|\Delta\|_1 &\leq 2\|\Delta_S\|_1 \\
+        &\leq 2\sqrt{\kappa}\|\Delta_S\|_2 \\
+        &\leq 2\sqrt{\kappa}\|\Delta\|_2
+    \end{align*}
+    Therefore, $\|\hat{\beta}_D - \beta^*\|_1 \leq 2\sqrt{\kappa}\|\hat{\beta}_D - \beta^*\|_2$.
+    \item Starting with the Dantzig selector $\|\frac{1}{n}X^T(y - X\hat{\beta}_D)\|_\infty \leq \lambda$, 
+    we can substitute $y$:
+    \begin{align*}
+        \|\frac{1}{n}X^T(y - X\hat{\beta}_D)\|_\infty &= \|\frac{1}{n}X^T(X\beta^* + \epsilon - X\hat{\beta}_D)\|_\infty \\
+        &= \|\frac{1}{n}X^T(\epsilon - X(\hat{\beta}_D - \beta^*))\|_\infty \\
+        &= \|\frac{1}{n}X^T\epsilon - \frac{1}{n}X^TX\Delta\|_\infty \\
+        &\leq \lambda
+    \end{align*}
+    Rearrange the inequality and then take the $\ell_\infty$ norm with the triangle inequality:
+    \begin{align*}
+        \frac{1}{n}X^TX\Delta &= \frac{1}{n}X^T\epsilon - \frac{1}{n}X^T(y - X\hat{\beta}_D) \\
+        \|\frac{1}{n}X^TX\Delta\|_\infty &= \|\frac{1}{n}X^T\epsilon + \frac{1}{n}X^T(y - X\hat{\beta}_D)\|_\infty \\
+        &\leq \|\frac{1}{n}X^T\epsilon\|_\infty + \|\frac{1}{n}X^T(y - X\hat{\beta}_D)\|_\infty \\
+        &\leq \lambda + \lambda = 2\lambda
+    \end{align*}
+    The last inequality follows from the given noise assumption and the Dantzig 
+    selector constraint. Thus, we have $\|\frac{1}{n}X^TX(\hat{\beta}_D - \beta^*)\|_\infty \leq 2\lambda$.
+
+    Using the definition of the squared Euclidean norm, we have:
+    \begin{align*}
+        \frac{1}{n}\|X\Delta\|_2^2 &= \frac{1}{n}(X\Delta)^\top(X\Delta) \\
+        &= \frac{1}{n}\Delta^\top X^\top X\Delta \\
+        &= \Delta^\top\left(\frac{1}{n}X^\top X\Delta\right)
+    \end{align*}
+    We can use Holder's inequality for the $\ell_1$ and $\ell_\infty$ norms:
+    \begin{align*}
+        |a^\top b| &\leq \|a\|_1\|b\|_\infty \\
+        a = \Delta, &b = \frac{1}{n}X^\top X\Delta \\
+        \frac{1}{n}\|X\Delta\|_2^2 &= \Delta^\top\left(\frac{1}{n}X^\top X\Delta\right) \\
+        &\leq |\Delta^\top\left(\frac{1}{n}X^\top X\Delta\right)| \\
+        &\leq \|\Delta\|_1\left\|\frac{1}{n}X^\top X\Delta\right\|_\infty \\
+        &\leq \|\Delta\|_1(2\lambda) \\
+        &= 2\lambda\|\Delta\|_1
+    \end{align*}
+    Thus, $\frac{1}{n}\|X(\hat{\beta}_D - \beta^*)\|_2^2 \leq 2\lambda\|\hat{\beta}_D - \beta^*\|_1$.
+    \item From (b) we know that $\|\Delta_{S^c}\|_1 \leq 3\|\Delta_S\|_1$. Since
+    $\|\Delta_S\|_1 \leq 3\|\Delta_S\|_1$, we also have $\|\Delta_{S^c}\|_1 \leq 3\|\Delta_S\|_1$, 
+    and thus $\Delta$ satisfies the cone condition required by the restricted eigenvalue condition. 
+    Then, we can apply the restricted eigenvalue condition to get $\frac{1}{n}\|X\Delta\|_2^2 \geq c\|\Delta\|_2^2$.
+    From (c), we know that $\frac{1}{n}\|X\Delta\|_2^2 \leq 2\lambda\|\Delta\|_1$. 
+    Combining these two inequalities, we have:
+    \begin{gather*}
+        c\|\Delta\|^2_2 \leq \frac{1}{n}\|X\Delta\|_2^2 \leq 2\lambda\|\Delta\|_1 \\
+        c\|\Delta\|^2_2 \leq 2\lambda\|\Delta\|_1 \\
+    \end{gather*}
+    Again, from (b), we have $\|\Delta\|_1 \leq 2\sqrt{\kappa}\|\Delta\|_2$. 
+    Substituting this into the previous inequality, we have:
+    \begin{align*}
+        c\|\Delta\|^2_2 &\leq 2\lambda\|\Delta\|_1 \\
+        &\leq 2\lambda(2\sqrt{\kappa}\|\Delta\|_2) \\
+        &= 4\lambda\sqrt{\kappa}\|\Delta\|_2 \\
+        \|\Delta\|_2 &\leq \frac{4\lambda\sqrt{\kappa}}{c} \\
+        \|\Delta\|_1 &\leq 2\sqrt{\kappa}\|\Delta\|_2 \\
+        &\leq 2\sqrt{\kappa}\left(\frac{4\lambda\sqrt{\kappa}}{c}\right) \\
+        &= \frac{8\lambda\kappa}{c}
+    \end{align*}
+    Therefore, $\|\hat{\beta}_D - \beta^*\|_1 \leq \frac{8}{c}\kappa\lambda$ and
+    if we let $C = 8/c > 0$, we can conclude that $\|\hat{\beta}_D - \beta^*\|_1 \leq C\kappa\lambda$,
+    and thus, the Dantzig selector achieves the same $\ell_1$ error rate as KASSO.
+\end{enumerate}
+
+\includepdf[pages=-]{HW3_P3.pdf}
+
+\noindent 
+\textbf{AI Usage:} All homework problems were written in VSCode and compiled using LaTeX
+(Problem 3 utilized Jupyter notebook), with assistance from ChatGPT and Github 
+Copilot inline suggestions.
 
 \end{document}
