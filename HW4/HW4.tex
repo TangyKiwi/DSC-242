@@ -228,4 +228,71 @@
     instead of summing over the worst case coherence, and thus avoids the loose $k$ factor.
 \end{enumerate}
 
+\section{}
+\begin{enumerate}[(a)]
+    \item The matrix exponential of a square matrix $A$ is defined by the
+    convergent power series $e^A = \sum_{n=0}^{\infty} \frac{A^n}{n!}$. Therefore,
+    $e^{X + Y} = \sum_{n=0}^{\infty} \frac{(X + Y)^n}{n!}$. Since $XY = YX$, we
+    can apply the binomial theorem $(X + Y)^n = \sum_{k=0}^{n} \binom{n}{k} X^k Y^{n-k}$. 
+    Substituting this into the exponential series gives:
+    \begin{align*}
+        e^{X + Y} &= \sum_{n=0}^{\infty} \frac{(X + Y)^n}{n!} \\
+        &= \sum_{n=0}^{\infty} \frac{1}{n!} \sum_{k=0}^{n} \binom{n}{k} X^k Y^{n-k} \\
+        &= \sum_{n=0}^{\infty} \sum_{k=0}^{n} \frac{X^k Y^{n-k}}{k! (n-k)!}
+    \end{align*}
+    Let $m = n - k$. Since $k, m \geq 0$, we can rearrange the absolutely convergent
+    series:
+    \begin{align*}
+        e^{X + Y} &= \sum_{k=0}^{\infty} \sum_{m=0}^{\infty} \frac{X^k Y^m}{k! m!} \\
+        &= \left(\sum_{k=0}^{\infty} \frac{X^k}{k!}\right) \left(\sum_{m=0}^{\infty} \frac{Y^m}{m!}\right) \\
+        &= e^X e^Y
+    \end{align*}
+    Thus, for commuting matrices $X$ and $Y$, we have $e^{X + Y} = e^X e^Y$.
+    \item Consider the symmetric matrices:
+    \[
+        X = \begin{bmatrix}
+            1 & 0 \\
+            0 & 0
+        \end{bmatrix}, \quad
+        Y = \begin{bmatrix}
+            0 & 1 \\
+            1 & 0   
+        \end{bmatrix}
+    \]
+    Since $X$ is diagonal, its matrix exponential is $e^X = \begin{bmatrix}
+        e & 0 \\
+        0 & 1
+    \end{bmatrix}$. Note that $Y^2 = I$, so $Y^{2m} = I$ and $Y^{2m+1} = Y$. Therefore,
+    using the matrix exponential series, we get:
+    \begin{align*}
+        e^Y &= \sum_{m = 0}^\infty \frac{Y^m}{m!} \\
+        &= \sum_{m = 0}^\infty \frac{Y^{2m}}{(2m)!} + \sum_{m = 0}^\infty \frac{Y^{2m+1}}{(2m+1)!} \\
+        &= \sum_{m = 0}^\infty \frac{I}{(2m)!} + \sum_{m = 0}^\infty \frac{Y}{(2m+1)!} \\
+        &= \left(\sum_{m = 0}^\infty \frac{1}{(2m)!}\right) I + \left(\sum_{m = 0}^\infty \frac{1}{(2m+1)!}\right) Y \\
+        &= \cosh(1) I + \sinh(1) Y \\
+        &= \begin{bmatrix}
+            \cosh(1) & \sinh(1) \\
+            \sinh(1) & \cosh(1)
+        \end{bmatrix}
+    \end{align*}
+    Therefore, 
+    \begin{align*}
+        e^Xe^Y &= \begin{bmatrix}
+            e & 0 \\
+            0 & 1
+        \end{bmatrix} \begin{bmatrix}
+            \cosh(1) & \sinh(1) \\
+            \sinh(1) & \cosh(1)
+        \end{bmatrix} \\
+        &= \begin{bmatrix}
+            e\cosh(1) & e\sinh(1) \\
+            \sinh(1) & \cosh(1)
+        \end{bmatrix}
+    \end{align*}
+    Note that this matrix is not symmetric since $e\sinh(1) \neq \sinh(1)$. However,
+    $X + Y$ is symmetric, and the exponential of a symmetric matrix is also symmetric
+    because $(e^{X + Y})^\top = e^{(X + Y)^\top} = e^{X + Y}$. Thus, $e^{X + Y}$ 
+    is symmetric while $e^Xe^Y$ is not, therefore they can't be equal.
+\end{enumerate}
+
 \end{document}
