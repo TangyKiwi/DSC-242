@@ -1,0 +1,68 @@
+%! Author = Kevin Lin
+%! Date = 10/29/2026
+
+% Preamble
+\documentclass[11pt,a4paper,margin=1in]{article}
+
+% Packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage{pdfpages}
+
+\title{HW 5}
+\author{Kevin Lin}
+\date{10/29/2026}
+
+% Document
+\begin{document}
+\maketitle
+
+\section{}
+Let $S = \sum_{i = 1}^n \epsilon_i A_i$. Assume $v > 0$. Since $\epsilon_i$ is
+Rademacher, $P(\epsilon_i = 1) = P(\epsilon_i = -1) = \frac{1}{2}$. Therefore,
+for any $\lambda \in \mathbb{R}$, $E[e^{\lambda \epsilon_i A_i}] = \frac{1}{2} e^{\lambda A_i} + \frac{1}{2} e^{-\lambda A_i} = \cosh(\lambda A_i)$. 
+Note that for any scalar $x \in \mathbb{R}$, $\cosh(x) = \sum_{k = 0}^\infty \frac{x^{2k}}{(2k)!}$.
+We can rewrite $(2k)! = \prod_{i = 1}^k (2j - 1)(2j) \geq 2^k k!$. Therefore, 
+$cosh(x) \leq \exp(\frac{x^2}{2})$. Because $A_i$ is symmetric, it admits
+an eigendecompisition $A_i = U_i a_i U_i^\top$ where $U_i$ is orthogonal and 
+$a_i$ is diagonal. Applying the scalar bound to each eigenvalue then gets us
+$cosh(\lambda A_i) \preceq \exp(\frac{\lambda^2 A_i^2}{2})$. Therefore, 
+$E[e^{\lambda \epsilon_i A_i}] \preceq \exp(\frac{\lambda^2 A_i^2}{2})$. Both
+sides are positive definite, so the log also applies: $\log E[e^{\lambda \epsilon_i A_i}] \preceq \frac{\lambda^2 A_i^2}{2}$. \\
+
+\noindent
+We now apply Lieb's inequality, that for symmetric random matrices $X_i$,
+$E[\text{Tr} \exp(\sum_i X_i)] \leq \text{Tr} \exp(\sum_i \log E[e^{X_i}])$. Let
+$X_i = \lambda \epsilon_i A_i$. Then, $E[\text{Tr} e^{\lambda S}] \leq \text{Tr} \exp(\sum_i \log E[e^{\lambda \epsilon_i A_i}]) \leq \text{Tr} \exp(\frac{\lambda^2}{2} \sum_i A_i^2)$.
+Let $B = \sum_i A_i^2$. Since each $A_i^2 \succeq 0$, $B \succeq 0$, and $\lambda_{\max}(B) = \|B\|_\text{op} = v$.
+Thus, every eigenvalue of $B$ is at most $v$, and $\text{Tr} \exp(\frac{\lambda^2}{2} B) = \sum_{i = 1}^d \exp(\frac{\lambda^2}{2} \lambda_i(B)) \leq d \exp(\frac{\lambda^2 v}{2})$. 
+Therefore, $E[\text{Tr} e^{\lambda S}] \leq d \exp(\frac{\lambda^2 v}{2})$. \\
+
+\noindent
+For any $\lambda > 0$, Markov's inequality gives us $P(\lambda_{\max}(S) \geq t) = P(e^{\lambda \lambda_{\max}(S)} \geq e^{\lambda t}) \leq e^{-\lambda t} E[e^{\lambda \lambda_{\max}(S)}]$. 
+Because $e^{\lambda S}$ is positive definite, $e^{\lambda \lambda_{\max}(S)} = \lambda_{\max}(e^{\lambda S}) \leq \text{Tr} e^{\lambda S}$. 
+We can combine this now with the previous inequality to get $P(\lambda_{\max}(S) \geq t) \leq e^{-\lambda t} E[\text{Tr} e^{\lambda S}] \leq d e^{-\lambda t} \exp(\frac{\lambda^2 v}{2}) = d \exp(-\lambda t + \frac{\lambda^2 v}{2} )$.
+Minimize the exponent by differentiating with respect to $\lambda$ and setting to zero:
+\begin{align*}
+    \frac{d}{d\lambda}(-\lambda t + \frac{\lambda^2 v}{2}) &= -t + \lambda v = 0 \\
+    \lambda^* &= \frac{t}{v} \\
+    -\lambda^* t + \frac{(\lambda^*)^2 v}{2} &= -\frac{t^2}{v} + \frac{t^2}{2v} = -\frac{t^2}{2v}
+\end{align*}
+Thus, $P(\lambda_{\max}(S) \geq t) \leq d \exp(-\frac{t^2}{2v})$. By symmetry
+(since $\epsilon_i$ is Rademacher, $\epsilon_i$ and $-\epsilon_i$ have the same distribution), 
+we also have $P(-\lambda_{\min}(S) \geq t) = P(\lambda_{\max}(-S) \leq t) \leq d \exp(-\frac{t^2}{2v})$.
+Again, because $S$ is symmetric, $\|S\|_\text{op} = \max(\lambda_{\max}(S), -\lambda_{\min}(S))$. 
+Using the union bound:
+\begin{align*}
+    P(\|S\|_\text{op} \geq t) &= P(\lambda_{\max}(S) \geq t \text{ or } -\lambda_{\min}(S) \geq t) \\
+    &\leq P(\lambda_{\max}(S) \geq t) + P(-\lambda_{\min}(S) \geq t) \\
+    &\leq 2 d \exp(-\frac{t^2}{2v})
+\end{align*}
+Finally, if $v = 0$, then $\sum_{i = 1}^n A_i^2 = 0$, which implies $A_i = 0$ for all $i$. 
+Therefore, $S = 0$, and $\|S\|_\text{op} = 0$ with probability 1. Therefore,
+$P\left[\|\sum_{i = 1}^n \epsilon_i A_i\|_\text{op} \geq t\right] \leq 2d\exp(-\frac{t^2}{2\|\sum_{i = 1}^n A_i^2\|_\text{op}})$ for all $t \geq 0$. 
+
+
+
+\end{document}
