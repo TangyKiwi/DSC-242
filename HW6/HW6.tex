@@ -121,4 +121,66 @@ By the definition of the squared Euclidean norm of the gradient, $\|\nabla f(X)\
 thus $Var f(X_1, \ldots, X_n) \leq 4E[\|\nabla f(X_1, \ldots, X_n)\|_2^2]$, which 
 is the $n$-dimensional Poincare inequality.
 
+\includepdf[pages=-]{HW6_P3.pdf}
+
+\section{}
+Let $Z = X - EX$, then $EZ = 0$, and since $Z$ is $\frac{\sigma^2}{4}$-subgaussian,
+we have $E[e^{\lambda Z}] \leq e^{\frac{\lambda^2\sigma^2}{8}}$ for all $\lambda \in \mathbb{R}$.
+Define the log MGF as $\psi(\lambda) = \log E[e^{\lambda Z}]$. Then, $\psi(0) = 0$
+and $\psi(\lambda) \leq \frac{\lambda^2\sigma^2}{8}$. Now use Jensen's inequality
+to get that $E[e^{\lambda Z}] \geq e^{\lambda EZ} = 1$, so $\psi(\lambda) \geq 0$.
+Combining these inequalities gives us $0 \leq \psi(\lambda) \leq \frac{\lambda^2\sigma^2}{8}$ 
+for all $\lambda \in \mathbb{R}$, which also guarantees that the MGF is finite
+for every real $\lambda$ and $\psi$ is differentiable. \\
+
+\noindent
+Since $\log(e^{\lambda Z}) = \lambda Z$, we can use the provided entropy function
+to get $\text{Ent}(e^{\lambda Z}) = \lambda E[Ze^{\lambda Z}] - E[e^{\lambda Z}]\log E[e^{\lambda Z}]$.
+Now, from $\psi$, we know $E[e^{\lambda Z}] = e^{\psi(\lambda)}$ and $E[Ze^{\lambda Z}] = \psi'(\lambda)e^{\psi(\lambda)}$, 
+so we can rewrite the entropy as $\text{Ent}(e^{\lambda Z}) = \lambda \psi'(\lambda)e^{\psi(\lambda)} - e^{\psi(\lambda)}\psi(\lambda) = E[e^{\lambda Z}](\lambda \psi'(\lambda) - \psi(\lambda))$.
+Thus, it suffices to prove that $\lambda \psi'(\lambda) - \psi(\lambda) \leq \frac{\lambda^2\sigma^2}{8}$ 
+for all $\lambda \in \mathbb{R}$. \\
+
+\noindent
+Define the exponentially tilted probability distribution $\frac{dP_\lambda}{dP} = \frac{e^{\lambda Z}}{E[e^{\lambda Z}]}$.
+Differentiating twice gives us $\psi''(\lambda) = \frac{E[Z^2e^{\lambda Z}]}{E[e^{\lambda Z}]} - \left(\frac{E[Ze^{\lambda Z}]}{E[e^{\lambda Z}]}\right)^2 = E_\lambda[Z^2] - (E_\lambda[Z])^2 = Var_\lambda(Z)$, 
+where $E_\lambda$ and $Var_\lambda$ are the expectation and variance under the 
+tilted distribution $P_\lambda$, which ultimately $Var_\lambda(Z) \geq 0$, and thus
+the log MFG is convex. For any differentiable convex function, $\psi(b) \geq \psi(a) + \psi'(a)(b - a)$.
+Choose $a = \lambda$, $b = 2\lambda$, then $\psi(2\lambda) \geq \psi(\lambda) + \psi'(\lambda)\lambda$, 
+which we can simplify:
+\begin{align*}
+    \psi(2\lambda) &\geq \psi(\lambda) + \psi'(\lambda)\lambda \\
+    \lambda\psi'(\lambda) &\leq \psi(2\lambda) - \psi(\lambda) \\
+    \lambda\psi'(\lambda) - \psi(\lambda) &\leq \psi(2\lambda) - 2\psi(\lambda) \leq \psi(2\lambda) \\
+    \lambda\psi'(\lambda) - \psi(\lambda) &\leq \frac{(2\lambda)^2\sigma^2}{8} = \frac{\lambda^2\sigma^2}{2}
+\end{align*}
+Now apply this to the entropy function to get $\text{Ent}(e^{\lambda Z}) \leq \frac{\lambda^2\sigma^2}{2}E[e^{\lambda Z}]$.
+Recall since $X = Z + EX$, we have $e^{\lambda X} = e^{\lambda EX}e^{\lambda Z}$.
+For any positive constant $c$ and positive random variable $Y$:
+\begin{align*}
+    \text{Ent}(cY) &= E[cY\log(cY)] - E[cY]\log E[cY] \\
+    &= cE[Y\log(cY)] - cE[Y]\log(cE[Y]) \\
+    &= cE[Y(\log c + \log Y)] - cE[Y](\log c + \log E[Y]) \\
+    &= cE[Y\log Y] + cE[Y]\log c - cE[Y]\log E[Y] - cE[Y]\log c \\
+    &= c(E[Y\log Y] - E[Y]\log E[Y]) \\
+    &= c\text{Ent}(Y)
+\end{align*}
+Now apply this with $c = e^{\lambda EX}$:
+\begin{align*}
+    \text{Ent}(e^{\lambda X}) &= \text{Ent}(e^{\lambda EX}e^{\lambda Z}) \\
+    &= e^{\lambda EX}\text{Ent}(e^{\lambda Z}) \\
+    &\leq e^{\lambda EX}\frac{\lambda^2\sigma^2}{2}E[e^{\lambda Z}] \\
+    &= \frac{\lambda^2\sigma^2}{2}E[e^{\lambda EX}e^{\lambda Z}] \\
+    &= \frac{\lambda^2\sigma^2}{2}E[e^{\lambda X}]
+\end{align*}
+Thus, $\text{Ent}(e^{\lambda X}) \leq \frac{\lambda^2\sigma^2}{2}E[e^{\lambda X}]$ 
+for all $\lambda \in \mathbb{R}$.
+
+\noindent 
+\textbf{AI Usage:} All homework problems were written in VSCode and compiled using LaTeX
+(Problem 3 utilized Jupyter notebook), with assistance from ChatGPT and Github 
+Copilot inline suggestions.
+
+
 \end{document}
